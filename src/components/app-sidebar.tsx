@@ -1,12 +1,25 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, UserPlus, FileText, FlaskConical,
-  StickyNote, Settings, HeartPulse,
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  FileText,
+  FlaskConical,
+  StickyNote,
+  Settings,
+  HeartPulse,
 } from "lucide-react";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton,
-  SidebarMenuItem, useSidebar,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const mainItems = [
@@ -58,7 +71,9 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-display text-base font-bold leading-tight">MediCare</div>
-              <div className="text-[11px] text-muted-foreground leading-tight">Patient Management</div>
+              <div className="text-[11px] text-muted-foreground leading-tight">
+                Patient Management
+              </div>
             </div>
           )}
         </Link>

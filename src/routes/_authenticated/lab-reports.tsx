@@ -38,7 +38,9 @@ function LabReports() {
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : !data || data.length === 0 ? (
-        <Card className="border-dashed p-12 text-center text-sm text-muted-foreground">No reports uploaded yet.</Card>
+        <Card className="border-dashed p-12 text-center text-sm text-muted-foreground">
+          No reports uploaded yet.
+        </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((l: any) => (
@@ -50,12 +52,25 @@ function LabReports() {
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-semibold">{l.title}</div>
                   {l.patient && (
-                    <Link to="/patients/$id" params={{ id: l.patient.id }} className="text-xs text-primary hover:underline">{l.patient.full_name}</Link>
+                    <Link
+                      to="/patients/$id"
+                      params={{ id: l.patient.id }}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      {l.patient.full_name}
+                    </Link>
                   )}
-                  <div className="text-xs text-muted-foreground">{format(new Date(l.created_at), "PP")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {format(new Date(l.created_at), "PP")}
+                  </div>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="mt-3 w-full" onClick={() => open(l.file_path)}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full"
+                onClick={() => open(l.file_path)}
+              >
                 <ExternalLink className="mr-2 h-4 w-4" /> Open file
               </Button>
             </Card>

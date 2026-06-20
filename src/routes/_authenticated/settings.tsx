@@ -21,13 +21,21 @@ function SettingsPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("id", user.id).single().then(({ data }) => {
-      if (data) setF({
-        full_name: data.full_name ?? "", specialization: data.specialization ?? "",
-        clinic_name: data.clinic_name ?? "", phone: data.phone ?? "",
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data)
+          setF({
+            full_name: data.full_name ?? "",
+            specialization: data.specialization ?? "",
+            clinic_name: data.clinic_name ?? "",
+            phone: data.phone ?? "",
+          });
+        setLoading(false);
       });
-      setLoading(false);
-    });
   }, [user]);
 
   const save = async () => {
@@ -46,16 +54,47 @@ function SettingsPage() {
         <p className="text-sm text-muted-foreground">Your doctor profile and clinic info.</p>
       </header>
       <Card className="card-shadow border-border/60 p-6">
-        {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : (
+        {loading ? (
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        ) : (
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2 sm:col-span-2"><Label>Email</Label><Input value={user?.email ?? ""} disabled /></div>
-            <div className="space-y-2"><Label>Full name</Label><Input value={f.full_name} onChange={(e) => setF({ ...f, full_name: e.target.value })} /></div>
-            <div className="space-y-2"><Label>Specialization</Label><Input value={f.specialization} onChange={(e) => setF({ ...f, specialization: e.target.value })} placeholder="e.g. General Physician" /></div>
-            <div className="space-y-2"><Label>Clinic name</Label><Input value={f.clinic_name} onChange={(e) => setF({ ...f, clinic_name: e.target.value })} /></div>
-            <div className="space-y-2"><Label>Phone</Label><Input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></div>
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Email</Label>
+              <Input value={user?.email ?? ""} disabled />
+            </div>
+            <div className="space-y-2">
+              <Label>Full name</Label>
+              <Input
+                value={f.full_name}
+                onChange={(e) => setF({ ...f, full_name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Specialization</Label>
+              <Input
+                value={f.specialization}
+                onChange={(e) => setF({ ...f, specialization: e.target.value })}
+                placeholder="e.g. General Physician"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Clinic name</Label>
+              <Input
+                value={f.clinic_name}
+                onChange={(e) => setF({ ...f, clinic_name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Phone</Label>
+              <Input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
+            </div>
             <div className="sm:col-span-2 flex justify-end">
               <Button onClick={save} disabled={saving}>
-                {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                {saving ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
                 Save changes
               </Button>
             </div>

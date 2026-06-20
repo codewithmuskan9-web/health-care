@@ -5,8 +5,12 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,7 +53,11 @@ export function TopBar() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-10 gap-2 rounded-full pl-1 pr-3">
-            <Avatar className="h-8 w-8"><AvatarFallback className="med-gradient text-white text-xs font-semibold">{initials || "DR"}</AvatarFallback></Avatar>
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="med-gradient text-white text-xs font-semibold">
+                {initials || "DR"}
+              </AvatarFallback>
+            </Avatar>
             <span className="hidden text-sm font-medium sm:inline">{email || "Doctor"}</span>
           </Button>
         </DropdownMenuTrigger>

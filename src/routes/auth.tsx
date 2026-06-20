@@ -26,7 +26,9 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { document.title = "Sign in — MediCare"; }, []);
+  useEffect(() => {
+    document.title = "Sign in — MediCare";
+  }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +36,8 @@ function AuthPage() {
     try {
       if (tab === "signup") {
         const { error } = await supabase.auth.signUp({
-          email, password,
+          email,
+          password,
           options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
@@ -47,7 +50,9 @@ function AuthPage() {
       navigate({ to: "/dashboard" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,18 +69,28 @@ function AuthPage() {
         <div className="relative space-y-8">
           <div>
             <h1 className="font-display text-4xl font-bold leading-tight">
-              Patient records,<br />reimagined for modern clinics.
+              Patient records,
+              <br />
+              reimagined for modern clinics.
             </h1>
             <p className="mt-4 max-w-md text-white/80">
-              Manage histories, prescriptions, lab reports and visits — all from one secure dashboard.
+              Manage histories, prescriptions, lab reports and visits — all from one secure
+              dashboard.
             </p>
           </div>
           <div className="grid gap-4">
             {[
               { Icon: Activity, t: "Visit timelines", d: "Track treatment progress at a glance." },
-              { Icon: Shield, t: "Secure by default", d: "Row-level access. Only you see your patients." },
+              {
+                Icon: Shield,
+                t: "Secure by default",
+                d: "Row-level access. Only you see your patients.",
+              },
             ].map(({ Icon, t, d }) => (
-              <div key={t} className="flex items-start gap-3 rounded-xl bg-white/10 p-4 backdrop-blur">
+              <div
+                key={t}
+                className="flex items-start gap-3 rounded-xl bg-white/10 p-4 backdrop-blur"
+              >
                 <Icon className="mt-0.5 h-5 w-5" />
                 <div>
                   <div className="font-semibold">{t}</div>
@@ -100,10 +115,16 @@ function AuthPage() {
             {tab === "signin" ? "Welcome back, Doctor" : "Create your account"}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {tab === "signin" ? "Sign in to access your dashboard." : "Start managing your patients today."}
+            {tab === "signin"
+              ? "Sign in to access your dashboard."
+              : "Start managing your patients today."}
           </p>
 
-          <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")} className="mt-6">
+          <Tabs
+            value={tab}
+            onValueChange={(v) => setTab(v as "signin" | "signup")}
+            className="mt-6"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign in</TabsTrigger>
               <TabsTrigger value="signup">Sign up</TabsTrigger>
@@ -113,18 +134,43 @@ function AuthPage() {
                 {tab === "signup" && (
                   <div className="space-y-2">
                     <Label htmlFor="fn">Full name</Label>
-                    <Input id="fn" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Dr. Sara Khan" required />
+                    <Input
+                      id="fn"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Dr. Sara Khan"
+                      required
+                    />
                   </div>
                 )}
                 <div className="space-y-2">
                   <Label htmlFor="em">Email</Label>
-                  <Input id="em" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  <Input
+                    id="em"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="pw">Password</Label>
-                  <Input id="pw" type="password" autoComplete={tab === "signin" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                  <Input
+                    id="pw"
+                    type="password"
+                    autoComplete={tab === "signin" ? "current-password" : "new-password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
                 </div>
-                <Button type="submit" disabled={loading} className="h-11 w-full text-base font-semibold">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="h-11 w-full text-base font-semibold"
+                >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {tab === "signin" ? "Sign in" : "Create account"}
                 </Button>

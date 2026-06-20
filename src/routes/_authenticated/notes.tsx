@@ -34,7 +34,9 @@ function NotesPage() {
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : !data || data.length === 0 ? (
-        <Card className="border-dashed p-12 text-center text-sm text-muted-foreground">No notes yet.</Card>
+        <Card className="border-dashed p-12 text-center text-sm text-muted-foreground">
+          No notes yet.
+        </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {data.map((v: any) => (
@@ -44,7 +46,11 @@ function NotesPage() {
                 {v.diagnosis && <Badge variant="outline">{v.diagnosis}</Badge>}
               </div>
               {v.patient && (
-                <Link to="/patients/$id" params={{ id: v.patient.id }} className="mt-1 block font-display font-semibold hover:text-primary">
+                <Link
+                  to="/patients/$id"
+                  params={{ id: v.patient.id }}
+                  className="mt-1 block font-display font-semibold hover:text-primary"
+                >
                   {v.patient.full_name}
                 </Link>
               )}

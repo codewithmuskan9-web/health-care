@@ -22,7 +22,11 @@ function usePatients(q: string) {
   return useQuery({
     queryKey: ["patients", q],
     queryFn: async () => {
-      let query = supabase.from("patients").select("*").order("created_at", { ascending: false }).limit(100);
+      let query = supabase
+        .from("patients")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(100);
       if (q.trim()) {
         const term = `%${q.trim()}%`;
         query = query.or(`full_name.ilike.${term},cnic.ilike.${term},phone.ilike.${term}`);
@@ -45,15 +49,26 @@ function PatientsList() {
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-bold md:text-3xl">Patient Records</h1>
-          <p className="text-sm text-muted-foreground">{patients.length} {patients.length === 1 ? "patient" : "patients"} shown</p>
+          <p className="text-sm text-muted-foreground">
+            {patients.length} {patients.length === 1 ? "patient" : "patients"} shown
+          </p>
         </div>
-        <Button asChild><Link to="/patients/new"><UserPlus className="mr-2 h-4 w-4" /> Add patient</Link></Button>
+        <Button asChild>
+          <Link to="/patients/new">
+            <UserPlus className="mr-2 h-4 w-4" /> Add patient
+          </Link>
+        </Button>
       </header>
 
       <Card className="card-shadow border-border/60 p-4">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name, CNIC, or mobile…" className="h-11 pl-9" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search by name, CNIC, or mobile…"
+            className="h-11 pl-9"
+          />
         </div>
       </Card>
 
@@ -65,8 +80,12 @@ function PatientsList() {
         </div>
       ) : patients.length === 0 ? (
         <Card className="card-shadow border-dashed p-12 text-center">
-          <p className="text-muted-foreground">No patients found. Try a different search or add a new patient.</p>
-          <Button asChild className="mt-4"><Link to="/patients/new">Add patient</Link></Button>
+          <p className="text-muted-foreground">
+            No patients found. Try a different search or add a new patient.
+          </p>
+          <Button asChild className="mt-4">
+            <Link to="/patients/new">Add patient</Link>
+          </Button>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -80,20 +99,45 @@ function PatientsList() {
                       {initials(p.full_name)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate font-semibold group-hover:text-primary">{p.full_name}</h3>
+                      <h3 className="truncate font-semibold group-hover:text-primary">
+                        {p.full_name}
+                      </h3>
                       <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                         {age !== null && <span>{age} yr</span>}
-                        {p.gender && <><span>·</span><span className="capitalize">{p.gender}</span></>}
-                        {p.blood_group && <Badge variant="outline" className="ml-auto h-5 px-1.5 text-[10px]">{p.blood_group}</Badge>}
+                        {p.gender && (
+                          <>
+                            <span>·</span>
+                            <span className="capitalize">{p.gender}</span>
+                          </>
+                        )}
+                        {p.blood_group && (
+                          <Badge variant="outline" className="ml-auto h-5 px-1.5 text-[10px]">
+                            {p.blood_group}
+                          </Badge>
+                        )}
                       </div>
                       <div className="mt-3 space-y-1 text-xs">
-                        {p.cnic && <div className="flex items-center gap-1.5 text-muted-foreground"><IdCard className="h-3 w-3" />{p.cnic}</div>}
-                        {p.phone && <div className="flex items-center gap-1.5 text-muted-foreground"><Phone className="h-3 w-3" />{p.phone}</div>}
+                        {p.cnic && (
+                          <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <IdCard className="h-3 w-3" />
+                            {p.cnic}
+                          </div>
+                        )}
+                        {p.phone && (
+                          <div className="flex items-center gap-1.5 text-muted-foreground">
+                            <Phone className="h-3 w-3" />
+                            {p.phone}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  {p.summary && <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{p.summary}</p>}
-                  <div className="mt-3 text-[11px] text-muted-foreground">Registered {format(new Date(p.created_at), "PP")}</div>
+                  {p.summary && (
+                    <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{p.summary}</p>
+                  )}
+                  <div className="mt-3 text-[11px] text-muted-foreground">
+                    Registered {format(new Date(p.created_at), "PP")}
+                  </div>
                 </Card>
               </Link>
             );

@@ -18,17 +18,29 @@ export function normalizePhone(v: string) {
   return d.slice(0, 13);
 }
 
-export const patientSchema = z.object({
-  full_name: z.string().trim().min(2, "Name is required").max(120),
-  cnic: z.string().trim().regex(cnicRegex, "CNIC must be 13 digits (e.g. 35202-1234567-1)").optional().or(z.literal("")),
-  phone: z.string().trim().regex(phoneRegex, "Use a valid Pakistani mobile (e.g. +923001234567)").optional().or(z.literal("")),
-  gender: z.enum(["male", "female", "other"]).optional(),
-  date_of_birth: z.string().optional().or(z.literal("")),
-  blood_group: z.string().max(5).optional().or(z.literal("")),
-  address: z.string().max(500).optional().or(z.literal("")),
-  allergies: z.string().max(500).optional().or(z.literal("")),
-  summary: z.string().max(1000).optional().or(z.literal("")),
-}).refine((d) => d.cnic || d.phone, { message: "Provide CNIC or phone", path: ["cnic"] });
+export const patientSchema = z
+  .object({
+    full_name: z.string().trim().min(2, "Name is required").max(120),
+    cnic: z
+      .string()
+      .trim()
+      .regex(cnicRegex, "CNIC must be 13 digits (e.g. 35202-1234567-1)")
+      .optional()
+      .or(z.literal("")),
+    phone: z
+      .string()
+      .trim()
+      .regex(phoneRegex, "Use a valid Pakistani mobile (e.g. +923001234567)")
+      .optional()
+      .or(z.literal("")),
+    gender: z.enum(["male", "female", "other"]).optional(),
+    date_of_birth: z.string().optional().or(z.literal("")),
+    blood_group: z.string().max(5).optional().or(z.literal("")),
+    address: z.string().max(500).optional().or(z.literal("")),
+    allergies: z.string().max(500).optional().or(z.literal("")),
+    summary: z.string().max(1000).optional().or(z.literal("")),
+  })
+  .refine((d) => d.cnic || d.phone, { message: "Provide CNIC or phone", path: ["cnic"] });
 
 export function calcAge(dob?: string | null) {
   if (!dob) return null;
@@ -39,5 +51,11 @@ export function calcAge(dob?: string | null) {
 }
 
 export function initials(name: string) {
-  return name.split(/\s+/).map(p => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+  return name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 }

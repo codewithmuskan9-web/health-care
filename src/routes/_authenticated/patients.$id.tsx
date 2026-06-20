@@ -2,8 +2,21 @@ import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ArrowLeft, Calendar, FileText, FlaskConical, StickyNote, Printer,
-  Plus, Trash2, Upload, Loader2, Phone, IdCard, MapPin, AlertCircle, Activity,
+  ArrowLeft,
+  Calendar,
+  FileText,
+  FlaskConical,
+  StickyNote,
+  Printer,
+  Plus,
+  Trash2,
+  Upload,
+  Loader2,
+  Phone,
+  IdCard,
+  MapPin,
+  AlertCircle,
+  Activity,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,11 +24,14 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
-  Tabs, TabsList, TabsTrigger, TabsContent,
-} from "@/components/ui/tabs";
-import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { calcAge, initials } from "@/lib/format";
@@ -32,9 +48,21 @@ function usePatient(id: string) {
     queryFn: async () => {
       const [patient, visits, rx, labs] = await Promise.all([
         supabase.from("patients").select("*").eq("id", id).single(),
-        supabase.from("visits").select("*").eq("patient_id", id).order("visit_date", { ascending: false }),
-        supabase.from("prescriptions").select("*").eq("patient_id", id).order("created_at", { ascending: false }),
-        supabase.from("lab_reports").select("*").eq("patient_id", id).order("created_at", { ascending: false }),
+        supabase
+          .from("visits")
+          .select("*")
+          .eq("patient_id", id)
+          .order("visit_date", { ascending: false }),
+        supabase
+          .from("prescriptions")
+          .select("*")
+          .eq("patient_id", id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("lab_reports")
+          .select("*")
+          .eq("patient_id", id)
+          .order("created_at", { ascending: false }),
       ]);
       if (patient.error) throw patient.error;
       return {
@@ -69,7 +97,10 @@ function PatientDetail() {
 
   return (
     <div className="space-y-6">
-      <Link to="/patients" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/patients"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="h-4 w-4" /> Back to patients
       </Link>
 
@@ -86,10 +117,16 @@ function PatientDetail() {
                 {age !== null && <span>{age} years</span>}
                 {p.gender && <span className="capitalize">· {p.gender}</span>}
                 {p.blood_group && <Badge variant="secondary">{p.blood_group}</Badge>}
-                <Badge variant="outline">Patient since {format(new Date(p.created_at), "MMM yyyy")}</Badge>
+                <Badge variant="outline">
+                  Patient since {format(new Date(p.created_at), "MMM yyyy")}
+                </Badge>
               </div>
             </div>
-            <Button variant="outline" onClick={remove} className="text-destructive hover:text-destructive">
+            <Button
+              variant="outline"
+              onClick={remove}
+              className="text-destructive hover:text-destructive"
+            >
               <Trash2 className="mr-2 h-4 w-4" /> Delete
             </Button>
           </div>
@@ -98,12 +135,16 @@ function PatientDetail() {
             {p.cnic && <Info Icon={IdCard} label="CNIC" value={p.cnic} />}
             {p.phone && <Info Icon={Phone} label="Phone" value={p.phone} />}
             {p.address && <Info Icon={MapPin} label="Address" value={p.address} />}
-            {p.allergies && <Info Icon={AlertCircle} label="Allergies" value={p.allergies} tone="warning" />}
+            {p.allergies && (
+              <Info Icon={AlertCircle} label="Allergies" value={p.allergies} tone="warning" />
+            )}
           </div>
 
           {p.summary && (
             <Card className="mt-6 border-border/60 bg-muted/40 p-4 text-sm">
-              <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Medical history summary</div>
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Medical history summary
+              </div>
               {p.summary}
             </Card>
           )}
@@ -112,25 +153,57 @@ function PatientDetail() {
 
       <Tabs defaultValue="timeline" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2 md:w-auto md:grid-cols-4">
-          <TabsTrigger value="timeline"><Calendar className="mr-2 h-4 w-4" />Visits</TabsTrigger>
-          <TabsTrigger value="rx"><FileText className="mr-2 h-4 w-4" />Prescriptions</TabsTrigger>
-          <TabsTrigger value="labs"><FlaskConical className="mr-2 h-4 w-4" />Lab reports</TabsTrigger>
-          <TabsTrigger value="notes"><StickyNote className="mr-2 h-4 w-4" />Notes</TabsTrigger>
+          <TabsTrigger value="timeline">
+            <Calendar className="mr-2 h-4 w-4" />
+            Visits
+          </TabsTrigger>
+          <TabsTrigger value="rx">
+            <FileText className="mr-2 h-4 w-4" />
+            Prescriptions
+          </TabsTrigger>
+          <TabsTrigger value="labs">
+            <FlaskConical className="mr-2 h-4 w-4" />
+            Lab reports
+          </TabsTrigger>
+          <TabsTrigger value="notes">
+            <StickyNote className="mr-2 h-4 w-4" />
+            Notes
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="timeline"><VisitsTab patient={p} visits={visits} /></TabsContent>
-        <TabsContent value="rx"><PrescriptionsTab patient={p} visits={visits} prescriptions={prescriptions} /></TabsContent>
-        <TabsContent value="labs"><LabsTab patient={p} visits={visits} labs={labs} /></TabsContent>
-        <TabsContent value="notes"><NotesTab visits={visits} /></TabsContent>
+        <TabsContent value="timeline">
+          <VisitsTab patient={p} visits={visits} />
+        </TabsContent>
+        <TabsContent value="rx">
+          <PrescriptionsTab patient={p} visits={visits} prescriptions={prescriptions} />
+        </TabsContent>
+        <TabsContent value="labs">
+          <LabsTab patient={p} visits={visits} labs={labs} />
+        </TabsContent>
+        <TabsContent value="notes">
+          <NotesTab visits={visits} />
+        </TabsContent>
       </Tabs>
     </div>
   );
 }
 
-function Info({ Icon, label, value, tone }: { Icon: any; label: string; value: string; tone?: "warning" }) {
+function Info({
+  Icon,
+  label,
+  value,
+  tone,
+}: {
+  Icon: any;
+  label: string;
+  value: string;
+  tone?: "warning";
+}) {
   return (
     <div className="flex items-start gap-2.5 rounded-lg border border-border/60 bg-muted/30 p-3">
-      <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-md ${tone === "warning" ? "bg-warning/20 text-warning-foreground" : "bg-primary-soft text-primary"}`}>
+      <div
+        className={`grid h-8 w-8 shrink-0 place-items-center rounded-md ${tone === "warning" ? "bg-warning/20 text-warning-foreground" : "bg-primary-soft text-primary"}`}
+      >
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0">
@@ -149,10 +222,16 @@ function VisitsTab({ patient, visits }: { patient: any; visits: any[] }) {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="font-display font-semibold">Visit timeline</h3>
-          <p className="text-xs text-muted-foreground">{visits.length} {visits.length === 1 ? "visit" : "visits"}</p>
+          <p className="text-xs text-muted-foreground">
+            {visits.length} {visits.length === 1 ? "visit" : "visits"}
+          </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" /> New visit</Button></DialogTrigger>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" /> New visit
+            </Button>
+          </DialogTrigger>
           <NewVisitDialog patient={patient} onClose={() => setOpen(false)} />
         </Dialog>
       </div>
@@ -168,14 +247,22 @@ function VisitsTab({ patient, visits }: { patient: any; visits: any[] }) {
               </span>
               <Card className="border-border/60 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-sm font-semibold">{format(new Date(v.visit_date), "PPpp")}</div>
+                  <div className="text-sm font-semibold">
+                    {format(new Date(v.visit_date), "PPpp")}
+                  </div>
                   {v.diagnosis && <Badge>{v.diagnosis}</Badge>}
                 </div>
                 {v.chief_complaint && (
-                  <div className="mt-2 text-sm"><span className="text-muted-foreground">Complaint: </span>{v.chief_complaint}</div>
+                  <div className="mt-2 text-sm">
+                    <span className="text-muted-foreground">Complaint: </span>
+                    {v.chief_complaint}
+                  </div>
                 )}
                 {v.doctor_notes && (
-                  <div className="mt-1 text-sm"><span className="text-muted-foreground">Notes: </span>{v.doctor_notes}</div>
+                  <div className="mt-1 text-sm">
+                    <span className="text-muted-foreground">Notes: </span>
+                    {v.doctor_notes}
+                  </div>
                 )}
               </Card>
             </li>
@@ -195,33 +282,74 @@ function NewVisitDialog({ patient, onClose }: { patient: any; onClose: () => voi
     try {
       const { data: u } = await supabase.auth.getUser();
       const { error } = await supabase.from("visits").insert({
-        patient_id: patient.id, doctor_id: u.user!.id, ...f,
+        patient_id: patient.id,
+        doctor_id: u.user!.id,
+        ...f,
       });
       if (error) throw error;
       qc.invalidateQueries({ queryKey: ["patient", patient.id] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       toast.success("Visit recorded");
       onClose();
-    } catch (e: any) { toast.error(e.message); } finally { setSaving(false); }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
   };
   return (
     <DialogContent>
-      <DialogHeader><DialogTitle>New visit for {patient.full_name}</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>New visit for {patient.full_name}</DialogTitle>
+      </DialogHeader>
       <div className="space-y-3">
-        <div><Label>Chief complaint</Label><Input value={f.chief_complaint} onChange={(e) => setF({ ...f, chief_complaint: e.target.value })} placeholder="e.g. Persistent cough for 5 days" /></div>
-        <div><Label>Diagnosis</Label><Input value={f.diagnosis} onChange={(e) => setF({ ...f, diagnosis: e.target.value })} placeholder="e.g. Acute bronchitis" /></div>
-        <div><Label>Doctor's notes</Label><Textarea rows={4} value={f.doctor_notes} onChange={(e) => setF({ ...f, doctor_notes: e.target.value })} /></div>
+        <div>
+          <Label>Chief complaint</Label>
+          <Input
+            value={f.chief_complaint}
+            onChange={(e) => setF({ ...f, chief_complaint: e.target.value })}
+            placeholder="e.g. Persistent cough for 5 days"
+          />
+        </div>
+        <div>
+          <Label>Diagnosis</Label>
+          <Input
+            value={f.diagnosis}
+            onChange={(e) => setF({ ...f, diagnosis: e.target.value })}
+            placeholder="e.g. Acute bronchitis"
+          />
+        </div>
+        <div>
+          <Label>Doctor's notes</Label>
+          <Textarea
+            rows={4}
+            value={f.doctor_notes}
+            onChange={(e) => setF({ ...f, doctor_notes: e.target.value })}
+          />
+        </div>
       </div>
       <DialogFooter>
-        <Button variant="outline" onClick={onClose}>Cancel</Button>
-        <Button onClick={save} disabled={saving}>{saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Save visit</Button>
+        <Button variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={save} disabled={saving}>
+          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Save visit
+        </Button>
       </DialogFooter>
     </DialogContent>
   );
 }
 
 // ---------------- Prescriptions ----------------
-function PrescriptionsTab({ patient, visits, prescriptions }: { patient: any; visits: any[]; prescriptions: any[] }) {
+function PrescriptionsTab({
+  patient,
+  visits,
+  prescriptions,
+}: {
+  patient: any;
+  visits: any[];
+  prescriptions: any[];
+}) {
   const [open, setOpen] = useState(false);
   const qc = useQueryClient();
   const print = () => window.print();
@@ -240,9 +368,15 @@ function PrescriptionsTab({ patient, visits, prescriptions }: { patient: any; vi
           <p className="text-xs text-muted-foreground">{prescriptions.length} total</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={print}><Printer className="mr-2 h-4 w-4" /> Print</Button>
+          <Button variant="outline" onClick={print}>
+            <Printer className="mr-2 h-4 w-4" /> Print
+          </Button>
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" /> Add medicine</Button></DialogTrigger>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add medicine
+              </Button>
+            </DialogTrigger>
             <NewRxDialog patient={patient} visits={visits} onClose={() => setOpen(false)} />
           </Dialog>
         </div>
@@ -250,7 +384,9 @@ function PrescriptionsTab({ patient, visits, prescriptions }: { patient: any; vi
 
       <div className="hidden print:mb-6 print:block">
         <h2 className="text-xl font-bold">Prescription — {patient.full_name}</h2>
-        <p className="text-sm">{patient.cnic} · {patient.phone}</p>
+        <p className="text-sm">
+          {patient.cnic} · {patient.phone}
+        </p>
       </div>
 
       {prescriptions.length === 0 ? (
@@ -259,18 +395,36 @@ function PrescriptionsTab({ patient, visits, prescriptions }: { patient: any; vi
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <tr><th className="pb-3">Medicine</th><th className="pb-3">Dosage</th><th className="pb-3">Frequency</th><th className="pb-3">Duration</th><th className="pb-3">Date</th><th className="pb-3 no-print"></th></tr>
+              <tr>
+                <th className="pb-3">Medicine</th>
+                <th className="pb-3">Dosage</th>
+                <th className="pb-3">Frequency</th>
+                <th className="pb-3">Duration</th>
+                <th className="pb-3">Date</th>
+                <th className="pb-3 no-print"></th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {prescriptions.map((rx) => (
                 <tr key={rx.id}>
-                  <td className="py-3 font-medium">{rx.medicine_name}{rx.instructions && <div className="text-xs font-normal text-muted-foreground">{rx.instructions}</div>}</td>
+                  <td className="py-3 font-medium">
+                    {rx.medicine_name}
+                    {rx.instructions && (
+                      <div className="text-xs font-normal text-muted-foreground">
+                        {rx.instructions}
+                      </div>
+                    )}
+                  </td>
                   <td className="py-3">{rx.dosage || "—"}</td>
                   <td className="py-3">{rx.frequency || "—"}</td>
                   <td className="py-3">{rx.duration || "—"}</td>
-                  <td className="py-3 text-muted-foreground">{format(new Date(rx.created_at), "PP")}</td>
+                  <td className="py-3 text-muted-foreground">
+                    {format(new Date(rx.created_at), "PP")}
+                  </td>
                   <td className="py-3 text-right no-print">
-                    <Button variant="ghost" size="icon" onClick={() => remove(rx.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove(rx.id)}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -282,40 +436,109 @@ function PrescriptionsTab({ patient, visits, prescriptions }: { patient: any; vi
   );
 }
 
-function NewRxDialog({ patient, visits, onClose }: { patient: any; visits: any[]; onClose: () => void }) {
+function NewRxDialog({
+  patient,
+  visits,
+  onClose,
+}: {
+  patient: any;
+  visits: any[];
+  onClose: () => void;
+}) {
   const qc = useQueryClient();
   const [f, setF] = useState({
-    medicine_name: "", dosage: "", frequency: "", duration: "", instructions: "", visit_id: visits[0]?.id ?? "",
+    medicine_name: "",
+    dosage: "",
+    frequency: "",
+    duration: "",
+    instructions: "",
+    visit_id: visits[0]?.id ?? "",
   });
   const [saving, setSaving] = useState(false);
   const save = async () => {
-    if (!f.medicine_name.trim()) { toast.error("Medicine name is required"); return; }
+    if (!f.medicine_name.trim()) {
+      toast.error("Medicine name is required");
+      return;
+    }
     setSaving(true);
     try {
       const { data: u } = await supabase.auth.getUser();
       const { error } = await supabase.from("prescriptions").insert({
-        patient_id: patient.id, doctor_id: u.user!.id,
-        medicine_name: f.medicine_name, dosage: f.dosage, frequency: f.frequency,
-        duration: f.duration, instructions: f.instructions,
+        patient_id: patient.id,
+        doctor_id: u.user!.id,
+        medicine_name: f.medicine_name,
+        dosage: f.dosage,
+        frequency: f.frequency,
+        duration: f.duration,
+        instructions: f.instructions,
         visit_id: f.visit_id || null,
       });
       if (error) throw error;
       qc.invalidateQueries({ queryKey: ["patient", patient.id] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
-      toast.success("Prescription added"); onClose();
-    } catch (e: any) { toast.error(e.message); } finally { setSaving(false); }
+      toast.success("Prescription added");
+      onClose();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
   };
   return (
     <DialogContent>
-      <DialogHeader><DialogTitle>Add prescription</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>Add prescription</DialogTitle>
+      </DialogHeader>
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="sm:col-span-2"><Label>Medicine *</Label><Input value={f.medicine_name} onChange={(e) => setF({ ...f, medicine_name: e.target.value })} placeholder="e.g. Amoxicillin 500mg" /></div>
-        <div><Label>Dosage</Label><Input value={f.dosage} onChange={(e) => setF({ ...f, dosage: e.target.value })} placeholder="1 tablet" /></div>
-        <div><Label>Frequency</Label><Input value={f.frequency} onChange={(e) => setF({ ...f, frequency: e.target.value })} placeholder="3x daily" /></div>
-        <div><Label>Duration</Label><Input value={f.duration} onChange={(e) => setF({ ...f, duration: e.target.value })} placeholder="7 days" /></div>
-        <div><Label>Instructions</Label><Input value={f.instructions} onChange={(e) => setF({ ...f, instructions: e.target.value })} placeholder="After meals" /></div>
+        <div className="sm:col-span-2">
+          <Label>Medicine *</Label>
+          <Input
+            value={f.medicine_name}
+            onChange={(e) => setF({ ...f, medicine_name: e.target.value })}
+            placeholder="e.g. Amoxicillin 500mg"
+          />
+        </div>
+        <div>
+          <Label>Dosage</Label>
+          <Input
+            value={f.dosage}
+            onChange={(e) => setF({ ...f, dosage: e.target.value })}
+            placeholder="1 tablet"
+          />
+        </div>
+        <div>
+          <Label>Frequency</Label>
+          <Input
+            value={f.frequency}
+            onChange={(e) => setF({ ...f, frequency: e.target.value })}
+            placeholder="3x daily"
+          />
+        </div>
+        <div>
+          <Label>Duration</Label>
+          <Input
+            value={f.duration}
+            onChange={(e) => setF({ ...f, duration: e.target.value })}
+            placeholder="7 days"
+          />
+        </div>
+        <div>
+          <Label>Instructions</Label>
+          <Input
+            value={f.instructions}
+            onChange={(e) => setF({ ...f, instructions: e.target.value })}
+            placeholder="After meals"
+          />
+        </div>
       </div>
-      <DialogFooter><Button variant="outline" onClick={onClose}>Cancel</Button><Button onClick={save} disabled={saving}>{saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add</Button></DialogFooter>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={save} disabled={saving}>
+          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Add
+        </Button>
+      </DialogFooter>
     </DialogContent>
   );
 }
@@ -326,7 +549,9 @@ function LabsTab({ patient, visits, labs }: { patient: any; visits: any[]; labs:
   const qc = useQueryClient();
 
   const openFile = async (path: string) => {
-    const { data, error } = await supabase.storage.from("patient-files").createSignedUrl(path, 60 * 10);
+    const { data, error } = await supabase.storage
+      .from("patient-files")
+      .createSignedUrl(path, 60 * 10);
     if (error) return toast.error(error.message);
     window.open(data.signedUrl, "_blank");
   };
@@ -348,7 +573,11 @@ function LabsTab({ patient, visits, labs }: { patient: any; visits: any[]; labs:
           <p className="text-xs text-muted-foreground">{labs.length} files</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Upload className="mr-2 h-4 w-4" /> Upload</Button></DialogTrigger>
+          <DialogTrigger asChild>
+            <Button>
+              <Upload className="mr-2 h-4 w-4" /> Upload
+            </Button>
+          </DialogTrigger>
           <NewLabDialog patient={patient} visits={visits} onClose={() => setOpen(false)} />
         </Dialog>
       </div>
@@ -364,13 +593,24 @@ function LabsTab({ patient, visits, labs }: { patient: any; visits: any[]; labs:
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-semibold">{l.title}</div>
-                  <div className="text-xs text-muted-foreground">{format(new Date(l.created_at), "PP")}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {format(new Date(l.created_at), "PP")}
+                  </div>
                   {l.description && <p className="mt-1 line-clamp-2 text-xs">{l.description}</p>}
                 </div>
               </div>
               <div className="mt-3 flex gap-2">
-                <Button size="sm" variant="outline" className="flex-1" onClick={() => openFile(l.file_path)}>View</Button>
-                <Button size="sm" variant="ghost" onClick={() => remove(l)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => openFile(l.file_path)}
+                >
+                  View
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => remove(l)}>
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
               </div>
             </Card>
           ))}
@@ -380,7 +620,15 @@ function LabsTab({ patient, visits, labs }: { patient: any; visits: any[]; labs:
   );
 }
 
-function NewLabDialog({ patient, visits, onClose }: { patient: any; visits: any[]; onClose: () => void }) {
+function NewLabDialog({
+  patient,
+  visits,
+  onClose,
+}: {
+  patient: any;
+  visits: any[];
+  onClose: () => void;
+}) {
   const qc = useQueryClient();
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -388,33 +636,75 @@ function NewLabDialog({ patient, visits, onClose }: { patient: any; visits: any[
   const [file, setFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const save = async () => {
-    if (!file || !title.trim()) { toast.error("Pick a file and add a title"); return; }
+    if (!file || !title.trim()) {
+      toast.error("Pick a file and add a title");
+      return;
+    }
     setSaving(true);
     try {
       const { data: u } = await supabase.auth.getUser();
       const uid = u.user!.id;
       const path = `${uid}/${patient.id}/${Date.now()}-${file.name.replace(/[^\w.-]+/g, "_")}`;
-      const up = await supabase.storage.from("patient-files").upload(path, file, { contentType: file.type });
+      const up = await supabase.storage
+        .from("patient-files")
+        .upload(path, file, { contentType: file.type });
       if (up.error) throw up.error;
       const { error } = await supabase.from("lab_reports").insert({
-        patient_id: patient.id, doctor_id: uid, visit_id: visitId || null,
-        title, description: desc, file_url: path, file_path: path, file_type: file.type,
+        patient_id: patient.id,
+        doctor_id: uid,
+        visit_id: visitId || null,
+        title,
+        description: desc,
+        file_url: path,
+        file_path: path,
+        file_type: file.type,
       });
       if (error) throw error;
       qc.invalidateQueries({ queryKey: ["patient", patient.id] });
       qc.invalidateQueries({ queryKey: ["dashboard"] });
-      toast.success("Uploaded"); onClose();
-    } catch (e: any) { toast.error(e.message); } finally { setSaving(false); }
+      toast.success("Uploaded");
+      onClose();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
   };
   return (
     <DialogContent>
-      <DialogHeader><DialogTitle>Upload lab report</DialogTitle></DialogHeader>
+      <DialogHeader>
+        <DialogTitle>Upload lab report</DialogTitle>
+      </DialogHeader>
       <div className="space-y-3">
-        <div><Label>Title *</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="CBC, X-ray Chest, MRI…" /></div>
-        <div><Label>Description</Label><Textarea rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
-        <div><Label>File *</Label><Input type="file" accept="image/*,.pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} /></div>
+        <div>
+          <Label>Title *</Label>
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="CBC, X-ray Chest, MRI…"
+          />
+        </div>
+        <div>
+          <Label>Description</Label>
+          <Textarea rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} />
+        </div>
+        <div>
+          <Label>File *</Label>
+          <Input
+            type="file"
+            accept="image/*,.pdf"
+            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          />
+        </div>
       </div>
-      <DialogFooter><Button variant="outline" onClick={onClose}>Cancel</Button><Button onClick={save} disabled={saving}>{saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Upload</Button></DialogFooter>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={save} disabled={saving}>
+          {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Upload
+        </Button>
+      </DialogFooter>
     </DialogContent>
   );
 }
