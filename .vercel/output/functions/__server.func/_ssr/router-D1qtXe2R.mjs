@@ -8,7 +8,7 @@ import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { n as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as Route$10 } from "./patients._id-DURM93dW.mjs";
 import { t as Route$11 } from "./patients.index-CWN73wC8.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-SaQX9UXK.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-D1qtXe2R.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-Dv-k2S3V.css";
@@ -79,7 +79,7 @@ function ErrorComponent({ error, reset }) {
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "mt-2 text-sm text-muted-foreground",
-					children: "Something went wrong. Try refreshing."
+					children: error.message || "Something went wrong. Try refreshing."
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "mt-6 flex justify-center gap-2",
