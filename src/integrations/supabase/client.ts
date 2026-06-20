@@ -10,13 +10,18 @@ function createSupabaseClient() {
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ["SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    console.error("Missing Supabase environment variables");
+    // Return a dummy client that throws when used
+    return {
+      auth: {
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        getSession: async () => ({ data: { session: null }, error: new Error("Missing Supabase env") }),
+        getUser: async () => ({ data: { user: null }, error: new Error("Missing Supabase env") }),
+      },
+      from: () => ({
+        select: () => { throw new Error("Missing Supabase environment variables! Please add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to Vercel."); }
+      }),
+    } as any;
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
