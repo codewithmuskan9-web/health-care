@@ -1,0 +1,1 @@
+import{c as e,d as t,t as n}from"./client-BRpzKPED.js";var r=t(e(),1);function i(){let[e,t]=(0,r.useState)(null),[i,a]=(0,r.useState)(!0);return(0,r.useEffect)(()=>{let e=!0;n.auth.getUser().then(({data:n})=>{e&&(t(n.user),a(!1))});let{data:r}=n.auth.onAuthStateChange((e,n)=>{t(n?.user??null)});return()=>{e=!1,r.subscription.unsubscribe()}},[]),{user:e,loading:i}}export{i as t};
